@@ -5,7 +5,6 @@
  *                                                                                                *
  ************************************************************************************************ */
 
-
 /**
  * Return Promise object that is resolved with string value === 'Hooray!!! She said "Yes"!',
  * if boolean value === true is passed, resolved with string value === 'Oh no, she said "No".',
@@ -28,10 +27,18 @@
  *      .catch((error) => console.log(error.message)) // 'Error: Wrong parameter is passed!
  *                                                    //  Ask her again.';
  */
-function willYouMarryMe(/* isPositiveAnswer */) {
-  throw new Error('Not implemented');
+function willYouMarryMe(isPositiveAnswer) {
+  return new Promise((resolve, reject) => {
+    if (typeof isPositiveAnswer === 'boolean') {
+      const answer = isPositiveAnswer
+        ? 'Hooray!!! She said "Yes"!'
+        : 'Oh no, she said "No".';
+      resolve(answer);
+    } else {
+      reject(new Error('Wrong parameter is passed! Ask her again.'));
+    }
+  });
 }
-
 
 /**
  * Return Promise object that should be resolved with array containing plain values.
@@ -48,8 +55,20 @@ function willYouMarryMe(/* isPositiveAnswer */) {
  *    })
  *
  */
-function processAllPromises(/* array */) {
-  throw new Error('Not implemented');
+function processAllPromises(array) {
+  return new Promise((resolve, reject) => {
+    if (array) {
+      const answer = [];
+      for (let i = 0; i < array.length; i += 1) {
+        array[i]
+          .then((p) => answer.push(p))
+          .catch((error) => answer.push(error));
+      }
+      resolve(answer);
+    } else {
+      reject(new Error('Wrong parameter is passed! Ask her again.'));
+    }
+  });
 }
 
 /**
@@ -71,8 +90,16 @@ function processAllPromises(/* array */) {
  *    })
  *
  */
-function getFastestPromise(/* array */) {
-  throw new Error('Not implemented');
+function getFastestPromise(array) {
+  return new Promise((resolve, reject) => {
+    if (array) {
+      Promise.race(array)
+        .then((r) => resolve(r))
+        .catch((error) => reject(error));
+    } else {
+      reject(new Error('error'));
+    }
+  });
 }
 
 /**
@@ -92,8 +119,36 @@ function getFastestPromise(/* array */) {
  *    });
  *
  */
-function chainPromises(/* array, action */) {
-  throw new Error('Not implemented');
+function promiseAll(arr) {
+  if (arr.length === 0) return Promise.resolve([]);
+  const copy = [...arr];
+
+  return new Promise((resolve) => {
+    const count = [];
+    for (let i = 0; i < arr.length; i += 1) {
+      arr[i]
+        .then((res) => {
+          copy[i] = res;
+          count.push(res);
+          if (count.length === arr.length) resolve(copy);
+        })
+        .catch(() => {
+          count.push('');
+          if (count.length === arr.length) resolve(copy);
+        });
+    }
+  });
+}
+function chainPromises(array, action) {
+  return new Promise((resolve, reject) => {
+    if (array) {
+      promiseAll(array)
+        .then((r) => resolve(r.reduce(action)))
+        .catch((error) => reject(error));
+    } else {
+      reject(new Error('error'));
+    }
+  });
 }
 
 module.exports = {
