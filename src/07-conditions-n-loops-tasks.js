@@ -536,18 +536,16 @@ function evaluateTicTacToePosition(position) {
     }
   }
 
-  for (let j = 0; j < position[0].length; j += 1) {
-    const diagonalArr1 = [];
-    const diagonalArr2 = [];
-    for (let i = 0; i < position.length; i += 1) {
-      diagonalArr1.push(position[i][i]);
-      diagonalArr2.push(position[i][position.length - i - 1]);
-    }
-    const arrIsSameDiagonal1 = checkLine(diagonalArr1);
-    const arrIsSameDiagonal2 = checkLine(diagonalArr2);
-    if (arrIsSameDiagonal1 || arrIsSameDiagonal2) {
-      return diagonalArr1[(diagonalArr1.length - 1) / 2];
-    }
+  const diagonalArr1 = [];
+  const diagonalArr2 = [];
+  for (let i = 0; i < position.length; i += 1) {
+    diagonalArr1.push(position[i][i]);
+    diagonalArr2.push(position[i][position.length - i - 1]);
+  }
+  const arrIsSameDiagonal1 = checkLine(diagonalArr1);
+  const arrIsSameDiagonal2 = checkLine(diagonalArr2);
+  if (arrIsSameDiagonal1 || arrIsSameDiagonal2) {
+    return diagonalArr1[(diagonalArr1.length - 1) / 2];
   }
 
   return undefined;
