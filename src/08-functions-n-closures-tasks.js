@@ -110,11 +110,11 @@ function memoize(func) {
  */
 function retry(func, attempts) {
   return () => {
-    for (let i = 0; i < attempts; i += 1) {
+    for (let i = 0; i < attempts; i) {
       try {
         return func();
       } catch (error) {
-        console.error('');
+        i += 1;
       }
     }
     return attempts;
